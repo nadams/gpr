@@ -1,0 +1,6 @@
+cmd/gpr/gpr
+*.tif
+*.gpr
+*.tiff
+*.xlsx
+.~lock*
