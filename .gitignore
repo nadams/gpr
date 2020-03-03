@@ -4,3 +4,6 @@ cmd/gpr/gpr
 *.tiff
 *.xlsx
 .~lock*
+*.tif
+cmd/splitter/results
+cmd/splitter/splitter
