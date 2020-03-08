@@ -1,9 +1,12 @@
 cmd/gpr/gpr
+cmd/pairs/pairs
+cmd/splitter/splitter
+cmd/splitter/results
 *.tif
-*.gpr
 *.tiff
+*.gpr
+*.gps
+*.zip
 *.xlsx
 .~lock*
-*.tif
-cmd/splitter/results
-cmd/splitter/splitter
+!**/testdata/*.gps

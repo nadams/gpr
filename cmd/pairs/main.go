@@ -197,6 +197,13 @@ func work(cli *CLI) error {
 					}
 
 					apndr.NewCol()
+
+					apndr.Append(fmt.Sprintf("No.%s/No.%s", m.left, m.right))
+					for i := range leftGPR.Rows {
+						apndr.Append(leftGPR.Rows[i].F550MedianB550 / rightGPR.Rows[i].F550MedianB550)
+					}
+
+					apndr.NewCol()
 				} else {
 					apndr.Append("F550 Medium - B550")
 					for i := range leftGPR.Rows {
@@ -224,6 +231,13 @@ func work(cli *CLI) error {
 					apndr.Append(fmt.Sprintf("No.%s-No.%s", m.left, m.right))
 					for i := range leftGPR.Rows {
 						apndr.Append(leftGPR.Rows[i].F650MedianB650 - rightGPR.Rows[i].F650MedianB650)
+					}
+
+					apndr.NewCol()
+
+					apndr.Append(fmt.Sprintf("No.%s/No.%s", m.left, m.right))
+					for i := range leftGPR.Rows {
+						apndr.Append(leftGPR.Rows[i].F650MedianB650 / rightGPR.Rows[i].F650MedianB650)
 					}
 
 					apndr.NewCol()
