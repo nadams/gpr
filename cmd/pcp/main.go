@@ -33,7 +33,7 @@ func main() {
 		}
 	}
 
-	resultsDir := filepath.Join(cli.Dir, "results")
+	resultsDir := filepath.Join(cli.Dir, "pcp_results")
 
 	for _, fis := range newFis {
 		if err := func() error {
