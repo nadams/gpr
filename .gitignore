@@ -10,3 +10,5 @@ cmd/splitter/results
 *.xlsx
 .~lock*
 !**/testdata/*.gps
+*.csv
+cmd/pcp/pcp
