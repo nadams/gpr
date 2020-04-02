@@ -110,6 +110,9 @@ type Row struct {
 	ID             string
 	X              int
 	Y              int
+	Block          int
+	Column         int
+	Row            int
 	Diameter       int
 	F650MeanB650   float64
 	F550MeanB550   float64
@@ -169,6 +172,9 @@ func Read(path string) (*GPR, error) {
 			continue
 		}
 
+		blockStr := line[0]
+		colStr := line[1]
+		rowStr := line[2]
 		protein := line[4]
 		xStr, yStr, diaStr := line[5], line[6], line[7]
 		f650MedianStr := line[45]
@@ -177,6 +183,21 @@ func Read(path string) (*GPR, error) {
 		f550MeanStr := line[48]
 		snr650Str := line[51]
 		snr550Str := line[52]
+
+		block, err := strconv.Atoi(blockStr)
+		if err != nil {
+			return nil, err
+		}
+
+		column, err := strconv.Atoi(colStr)
+		if err != nil {
+			return nil, err
+		}
+
+		row, err := strconv.Atoi(rowStr)
+		if err != nil {
+			return nil, err
+		}
 
 		x, err := strconv.Atoi(xStr)
 		if err != nil {
@@ -249,6 +270,9 @@ func Read(path string) (*GPR, error) {
 
 		rows = append(rows, Row{
 			ID:             protein,
+			Block:          block,
+			Column:         column,
+			Row:            row,
 			X:              x,
 			Y:              y,
 			Diameter:       dia,

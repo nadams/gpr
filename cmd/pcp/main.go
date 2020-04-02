@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/alecthomas/kong"
@@ -76,12 +77,12 @@ func main() {
 			defer iggOut.Flush()
 			defer igmOut.Flush()
 
-			iggOut.Write([]string{"ID", "F550 Median - B550"})
-			igmOut.Write([]string{"ID", "F650 Median - B650"})
+			iggOut.Write([]string{"ID", "F550 Median - B550", "Block", "Column", "Row"})
+			igmOut.Write([]string{"ID", "F650 Median - B650", "Block", "Column", "Row"})
 
 			for _, row := range data.SortByID().Rows {
-				iggOut.Write([]string{row.ID, fmt.Sprintf("%v", row.F550MedianB550)})
-				igmOut.Write([]string{row.ID, fmt.Sprintf("%v", row.F650MedianB650)})
+				iggOut.Write([]string{row.ID, fmt.Sprintf("%v", row.F550MedianB550), strconv.Itoa(row.Block), strconv.Itoa(row.Column), strconv.Itoa(row.Row)})
+				igmOut.Write([]string{row.ID, fmt.Sprintf("%v", row.F650MedianB650), strconv.Itoa(row.Block), strconv.Itoa(row.Column), strconv.Itoa(row.Row)})
 			}
 
 			return nil
