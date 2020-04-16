@@ -33,16 +33,13 @@ func main() {
 	for _, filePath := range cli.Files {
 		out, err := filepath.Glob(filePath)
 		if err != nil {
-			if err := processHTML(filePath, cli.Out); err != nil {
+			out = []string{filePath}
+		}
+
+		for _, f := range out {
+			if err := processHTML(f, cli.Out); err != nil {
 				log.Println(err)
 				continue
-			}
-		} else {
-			for _, f := range out {
-				if err := processHTML(f, cli.Out); err != nil {
-					log.Println(err)
-					continue
-				}
 			}
 		}
 	}
@@ -85,10 +82,9 @@ func processHTML(in, out string) error {
 			}
 
 			i := strings.Index(b64, ",")
-
 			dec := base64.NewDecoder(base64.StdEncoding, strings.NewReader(b64[i+1:]))
 
-			if err := processImage(protein, group, out, dec); err != nil {
+			if err := processImage(protein, group, filepath.Join(out, withoutExt(in)), dec); err != nil {
 				log.Println(protein, group, err)
 				return
 			}
@@ -114,10 +110,12 @@ func processImage(protein, group, out string, reader io.Reader) error {
 		return err
 	}
 
+	if err := os.MkdirAll(filepath.Join(out, protein), 0755); err != nil {
+		return err
+	}
+
 	totalWidth := ((img.Bounds().Dx() - tWidthLeft - tWidthRight) / (w + padding*2)) + 1
 	totalHeight := ((img.Bounds().Dy() - tHeightTop - tHeightBottom) / (h + padding*2)) + 1
-
-	fmt.Printf("protein: %s\ngroup: %s\nwidth: %d\nheight: %d\n", protein, group, totalWidth, totalHeight)
 
 	for i := 0; i < totalWidth; i++ {
 		for j := 0; j < totalHeight; j++ {
@@ -128,7 +126,7 @@ func processImage(protein, group, out string, reader io.Reader) error {
 
 			res := transform.Crop(img, image.Rect(x1, y1, x2, y2))
 			if _, _, _, a := res.At(x1, y1).RGBA(); a >= 65535 {
-				if err := imgio.Save(filepath.Join(out, fmt.Sprintf("%s_%s_%d_%d.png", protein, group, i+1, j+1)), res, imgio.PNGEncoder()); err != nil {
+				if err := imgio.Save(filepath.Join(out, protein, fmt.Sprintf("%s_%s_%d_%d.png", protein, group, i+1, j+1)), res, imgio.PNGEncoder()); err != nil {
 					log.Println(err)
 					continue
 				}
@@ -137,4 +135,14 @@ func processImage(protein, group, out string, reader io.Reader) error {
 	}
 
 	return nil
+}
+
+func withoutExt(in string) string {
+	base := filepath.Base(in)
+	idx := strings.LastIndex(base, filepath.Ext(base))
+	if idx < 0 {
+		return in
+	}
+
+	return in[:idx]
 }
