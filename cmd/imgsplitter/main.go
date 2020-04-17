@@ -125,7 +125,7 @@ func processImage(protein, group, out string, reader io.Reader) error {
 			y2 := j*h + h + tHeightTop
 
 			res := transform.Crop(img, image.Rect(x1, y1, x2, y2))
-			res2 := transform.Resize(res, 135, h, transform.Linear)
+			res2 := transform.Resize(res, 120, h, transform.Linear)
 			if _, _, _, a := res.At(x1, y1).RGBA(); a >= 65535 {
 				if err := imgio.Save(filepath.Join(out, protein, fmt.Sprintf("%s_%s_%d_%d.png", protein, group, i+1, j+1)), res2, imgio.PNGEncoder()); err != nil {
 					log.Println(err)
