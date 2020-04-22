@@ -114,6 +114,8 @@ type Row struct {
 	Column         int
 	Row            int
 	Diameter       int
+	F650Median     float64
+	F550Median     float64
 	F650MeanB650   float64
 	F550MeanB550   float64
 	F650MedianB650 float64
@@ -177,8 +179,10 @@ func Read(path string) (*GPR, error) {
 		rowStr := line[2]
 		protein := line[4]
 		xStr, yStr, diaStr := line[5], line[6], line[7]
-		f650MedianStr := line[45]
-		f550MedianStr := line[46]
+		f650MedianStr := line[8]
+		f550MedianStr := line[20]
+		f650MedianMinusStr := line[45]
+		f550MedianMinusStr := line[46]
 		f650MeanStr := line[47]
 		f550MeanStr := line[48]
 		snr650Str := line[51]
@@ -234,6 +238,16 @@ func Read(path string) (*GPR, error) {
 			return nil, err
 		}
 
+		f650MedianMinus, err := strconv.ParseFloat(f650MedianMinusStr, 64)
+		if err != nil {
+			return nil, err
+		}
+
+		f550MedianMinus, err := strconv.ParseFloat(f550MedianMinusStr, 64)
+		if err != nil {
+			return nil, err
+		}
+
 		snr650, err := strconv.ParseFloat(snr650Str, 64)
 		if err != nil {
 			return nil, err
@@ -252,12 +266,12 @@ func Read(path string) (*GPR, error) {
 			f550Mean = 1
 		}
 
-		if f650Median < 0 {
-			f650Median = 1
+		if f650MedianMinus < 0 {
+			f650MedianMinus = 1
 		}
 
-		if f550Median < 0 {
-			f550Median = 1
+		if f550MedianMinus < 0 {
+			f550MedianMinus = 1
 		}
 
 		if snr650 < 0 {
@@ -276,10 +290,12 @@ func Read(path string) (*GPR, error) {
 			X:              x,
 			Y:              y,
 			Diameter:       dia,
+			F550Median:     f550Median,
+			F650Median:     f650Median,
 			F650MeanB650:   f650Mean,
 			F550MeanB550:   f550Mean,
-			F650MedianB650: f650Median,
-			F550MedianB550: f550Median,
+			F650MedianB650: f650MedianMinus,
+			F550MedianB550: f550MedianMinus,
 			SNR650:         snr650,
 			SNR550:         snr550,
 		})
