@@ -12,3 +12,4 @@ cmd/splitter/results
 !**/testdata/*.gps
 *.csv
 cmd/pcp/pcp
+cmd/k1/k1

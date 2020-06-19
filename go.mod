@@ -15,6 +15,7 @@ require (
 	github.com/markbates/pkger v0.14.1
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
+	github.com/phpdave11/gofpdf v1.4.1
 	github.com/tealeg/xlsx v1.0.5
 	golang.org/x/image v0.0.0-20200119044424-58c23975cae1
 	golang.org/x/sys v0.0.0-20191128015809-6d18c012aee9 // indirect
