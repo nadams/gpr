@@ -4,6 +4,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"image"
+	"image/color"
+	"image/draw"
 	"io"
 	"log"
 	"os"
@@ -125,9 +127,13 @@ func processImage(protein, group, out string, reader io.Reader) error {
 			y2 := j*h + h + tHeightTop
 
 			res := transform.Crop(img, image.Rect(x1, y1, x2, y2))
-			res2 := transform.Resize(res, 120, h, transform.Linear)
+			// 120
+			res2 := transform.Resize(res, 69, 41, transform.Linear)
 			if _, _, _, a := res.At(x1, y1).RGBA(); a >= 65535 {
-				if err := imgio.Save(filepath.Join(out, protein, fmt.Sprintf("%s_%s_%d_%d.png", protein, group, i+1, j+1)), res2, imgio.PNGEncoder()); err != nil {
+				imgout := image.NewRGBA(image.Rect(0, 0, res2.Rect.Dx()+1, res2.Rect.Dy()+1))
+				draw.Draw(imgout, imgout.Bounds(), &image.Uniform{color.White}, image.ZP, draw.Src)
+				draw.Draw(imgout, image.Rect(1, 1, res2.Rect.Dx(), res2.Rect.Dy()), res2, image.ZP, draw.Src)
+				if err := imgio.Save(filepath.Join(out, protein, fmt.Sprintf("%s_%s_%d_%d.png", protein, group, i+1, j+1)), imgout, imgio.PNGEncoder()); err != nil {
 					log.Println(err)
 					continue
 				}
